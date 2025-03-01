@@ -1,22 +1,19 @@
+import { TDadosEtapaUm } from '@/Types/formTypes'
 import { Span } from 'next/dist/trace'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BsArrowRight, BsEye, BsEyeSlash } from 'react-icons/bs'
 import { MdEmail } from 'react-icons/md'
 
 
-type TDadosGerais = {
-    nome: string,
-    email: string,
-    senha: string,
-    confirmarSenha: string
-}
+
 type Props = {
+    handleVerificarEtapa: (isValid: boolean) => void;
 
-    handleEtapa: ({ confirmarSenha, email, nome, senha }: TDadosGerais) => void
+    handleEtapa: ({ confirmarSenha, email, nome, senha }: TDadosEtapaUm) => void
 
 }
 
-const FormEtapaUm = ({ handleEtapa }: Props) => {
+const FormEtapaUm = ({ handleEtapa, handleVerificarEtapa }: Props) => {
 
     const [nome, setNome] = useState<string>('');
     const [email, setEmail] = useState<string>('');
@@ -43,7 +40,7 @@ const FormEtapaUm = ({ handleEtapa }: Props) => {
         if (senha !== confirmarSenha) {
             confirmarSenhaErros.push("As senhas não coincidem!");
         }
-        if (senha.length < 8) {
+        if (senha.length > 0 && senha.length < 8) {
             erros.push("A senha deve ter mais de 8 dígitos!");
         }
         if (confirmarSenha.length > 0 && confirmarSenha.length < 8) {
@@ -92,6 +89,19 @@ const FormEtapaUm = ({ handleEtapa }: Props) => {
             confirmarSenha: confirmarSenha
         })
     }
+
+
+    useEffect(() => {
+
+        if (!confirmarSenha || !senha || !nome || !email || senha !== confirmarSenha) {
+            handleVerificarEtapa(false);
+
+        } else {
+            handleVerificarEtapa(true);
+
+        }
+
+    }, [confirmarSenha, senha, nome, email]);
 
 
 
@@ -201,7 +211,7 @@ const FormEtapaUm = ({ handleEtapa }: Props) => {
 
 
             <div className='rounded-md shadow-md p-2 flex flex-row justify-center items-center w-fit   '>
-                <button className='commonIcon text-3xl flex flex-row gap-5 items-center font-semibold text-blue-500'
+                <button className={`commonIcon text-3xl flex flex-row gap-5 items-center font-semibold text-blue-500 `}
                     onClick={handleSendEtapa}
                 > Salvar dados <span><BsArrowRight /></span></button>
             </div>

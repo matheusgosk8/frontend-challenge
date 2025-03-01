@@ -1,29 +1,24 @@
 "use client"
 
+import { TDadosEtapaDois } from '@/Types/formTypes';
 import { useReactQueryHome } from '@/Utils/ReactQueryUtils/useReactQueryHome';
 import { useQuery } from '@tanstack/react-query';
 import { Span } from 'next/dist/trace'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BsArrowRight, BsEye, BsEyeSlash } from 'react-icons/bs'
 import { MdEmail } from 'react-icons/md';
 import { IMaskInput } from "react-imask";
 
 
 
-type TDadosGerais = {
-    cep: string,
-    pais: string,
-    estado: string,
-    cidade: string,
-    endereco: string
-}
 type Props = {
 
-    handleEtapa: ({ cep, cidade, endereco, estado, pais }: TDadosGerais) => void
+    handleEtapa: ({ cep, cidade, endereco, estado, pais }: TDadosEtapaDois) => void
+    handleVerificarEtapa: (isValid: boolean) => void;
 
 }
 
-const FormEtapaDois = ({ handleEtapa }: Props) => {
+const FormEtapaDois = ({ handleEtapa, handleVerificarEtapa }: Props) => {
 
 
     const [erro, setErro] = useState<boolean>(false);
@@ -62,27 +57,34 @@ const FormEtapaDois = ({ handleEtapa }: Props) => {
     };
 
 
-    const handleCep = () => {
 
-        if (!cep || !validarFormatoCep(cep)) {
-            return
+
+    /**
+     * Colocado aqui parar gerar um "Debounce ", atrasando os inputs do usuário, evitando que
+     * a chamada lá do cep ocorra de forma inesperada.
+     */
+    useEffect(() => {
+
+        if (validarFormatoCep(cep)) {
+
+
+
+            const timeout = setTimeout(() => {
+                if (cep.length === 9) {
+                    handleCep();
+                }
+            }, 300);
+
+
+
+            return () => clearTimeout(timeout);
         }
+    }, [cep]);
 
 
-        cepRefetch();
-
-        if (cepData) {
-            console.log('Cep data: ', cepData)
-            setPais('Brasil');
-            setEstado(cepData?.estado);
-            setCidade(cepData.localidade);
-            setEndereco(`${cepData?.logradouro}, ${cepData?.bairro}`);
-        }
-
-
-    }
-
-
+    /**
+     * @description Verifica se existem inputs com valores vazios.
+     */
     const checkTextFields = () => {
         let erros: Record<string, string> = {};
 
@@ -117,6 +119,42 @@ const FormEtapaDois = ({ handleEtapa }: Props) => {
         })
     }
 
+    const handleCep = () => {
+
+
+
+        if (!validarFormatoCep(cep)) {
+            return
+        }
+
+        cepRefetch();
+
+
+
+        if (cepData) {
+            // console.log('Cep data: ', cepData)
+            setPais('Brasil');
+            setEstado(cepData?.estado || "");
+            setCidade(cepData?.localidade || "");
+            setEndereco(`${cepData?.logradouro || ""} ${cepData?.bairro || ""}`);
+
+
+
+        }
+
+    }
+
+
+    useEffect(() => {
+        if (!cep || !pais || !estado || !cidade || !endereco) {
+            handleVerificarEtapa(false)
+        } else {
+            handleVerificarEtapa(true)
+            setErro(false)
+        }
+
+
+    }, [cep, pais, estado, cidade, endereco])
 
 
 
@@ -126,12 +164,13 @@ const FormEtapaDois = ({ handleEtapa }: Props) => {
                 <label className="containerField ">
                     <span className="labelField">Cep: </span>
                     <IMaskInput
-                        mask="00000-000" // Máscara para CEP
-                        value={cepIsLoading ? 'Aguarde ...' : cep}
-                        onAccept={(val: string) => setCep(val)} // Atualiza o estado corretamente
+                        mask="00000-000"
+                        value={cep}
+                        onAccept={(val: string) => setCep(val)}
                         placeholder="Digite seu CEP"
                         className="inputField"
                         onBlur={handleCep}
+                        onComplete={handleCep}
                     />
                     <span className="errorField">
                         {
@@ -151,6 +190,7 @@ const FormEtapaDois = ({ handleEtapa }: Props) => {
                         onChange={(e) => setPais(e.target.value)}
                         placeholder="Informe o país"
                         className="inputField"
+                        onBlur={checkTextFields}
                     />
                     {paisError && (
                         <span className="errorField text-red-600">{paisError}</span>
@@ -165,6 +205,7 @@ const FormEtapaDois = ({ handleEtapa }: Props) => {
                         onChange={(e) => setEstado(e.target.value)}
                         placeholder="Informe o estado"
                         className="inputField"
+                        onBlur={checkTextFields}
                     />
                     {estadoError && (
                         <span className="errorField text-red-600">{estadoError}</span>
@@ -179,6 +220,7 @@ const FormEtapaDois = ({ handleEtapa }: Props) => {
                         onChange={(e) => setCidade(e.target.value)}
                         placeholder="Informe a cidade"
                         className="inputField"
+                        onBlur={checkTextFields}
                     />
                     {cidadeError && (
                         <span className="errorField text-red-600">{cidadeError}</span>
@@ -193,6 +235,7 @@ const FormEtapaDois = ({ handleEtapa }: Props) => {
                         onChange={(e) => setEndereco(e.target.value)}
                         placeholder="Informe o endereço"
                         className="inputField"
+                        onBlur={checkTextFields}
                     />
                     {enderecoError && (
                         <span className="errorField text-red-600">{enderecoError}</span>

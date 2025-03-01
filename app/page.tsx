@@ -1,9 +1,13 @@
 import Hello from "@/components/Hello";
+import ToastProvider from "@/Providers/ReactTostifyProvider";
 
 export default function Home() {
   return (
     <main className="">
-      <Hello />
+      <ToastProvider>
+        <Hello />
+      </ToastProvider>
+
     </main>
   );
 }

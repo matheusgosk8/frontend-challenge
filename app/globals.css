@@ -37,3 +37,14 @@ html {
 .commonIcon{
   @apply cursor-pointer opacity-65 hover:opacity-100 transition-opacity
 }
+
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}

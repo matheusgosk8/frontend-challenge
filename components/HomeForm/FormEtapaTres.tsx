@@ -3,15 +3,16 @@
 import TextareaAutosize from 'react-textarea-autosize';
 
 import { TDadosEtapaTres } from '@/Types/formTypes';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BsArrowRight } from 'react-icons/bs';
 
 type Props = {
     handleEtapa: (data: TDadosEtapaTres) => void;
-    loading: boolean
+    loading: boolean,
+    handleVerificarEtapa: (isValid: boolean) => void;
 }
 
-const FormEtapaTres = ({ handleEtapa, loading }: Props) => {
+const FormEtapaTres = ({ handleEtapa, loading, handleVerificarEtapa }: Props) => {
 
     const [mensagem, setMensagem] = useState<string>('');
     const [mensagemErro, setMensagemErro] = useState<boolean>(false);
@@ -28,6 +29,14 @@ const FormEtapaTres = ({ handleEtapa, loading }: Props) => {
         })
     }
 
+
+    useEffect(() => {
+        if (!mensagem) {
+            handleVerificarEtapa(false)
+        } else {
+            handleVerificarEtapa(true)
+        }
+    }, [mensagem])
 
     return (
         <div className='flex flex-col '>
