@@ -29,16 +29,34 @@ export const POST = async (request: Request) => {
   try {
 
     const body = await request.json();
-    console.log(body);
+
+    const dados = body.data;
+    console.log(dados);
+
+    const checkData = Object.values(dados).some(value => value === null || value === undefined || value === '' || (Array.isArray(value) && value.length === 0) || (typeof value === 'object' && Object.keys(value).length === 0));
+
+    if (checkData) {
+      return NextResponse.json({
+        message: 'Erro, não são permitidos envios vazios!',
+        status: 3
+      }, { status: 400, statusText: 'ERRO No 400' })
+    }
 
     // Tratando os dados
+    const senha = dados.senha;
 
+    const regex = /^[a-zA-Z0-9]+$/;
+    const testSenha = regex.test(senha);
+    if (!testSenha) {
+      return NextResponse.json({
+        message: 'Erro, a senha contém caracteres não permitidos!',
+        status: 3
+      }, { status: 500, statusText: 'ERRO No 500' })
+    }
 
     // Hasheando a senha para colocar na DB
-    const hashedSenha = await bcrypt.hash(body.data.senha, 12);
+    const hashedSenha = await bcrypt.hash(senha, 12);
     console.log('Hashed senha: ', hashedSenha)
-
-
 
     return NextResponse.json({ message: 'Dados enviados com sucesso!', status: 1 }, { status: 200, statusText: "Ok!" })
 

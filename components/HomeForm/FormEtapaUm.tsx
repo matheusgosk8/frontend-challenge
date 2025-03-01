@@ -31,6 +31,11 @@ const FormEtapaUm = ({ handleEtapa, handleVerificarEtapa }: Props) => {
     const [emailErro, setEmailErro] = useState<string[]>(['']);
 
 
+    const validarSenha = (val: string) => {
+        // Verifica se a senha é alfanumérica (contém letras e números)
+        const regex = /^[a-zA-Z0-9]+$/;
+        return regex.test(val);
+    };
 
 
     const checkSenha = () => {
@@ -47,6 +52,14 @@ const FormEtapaUm = ({ handleEtapa, handleVerificarEtapa }: Props) => {
             confirmarSenhaErros.push("A senha deve ter mais de 8 dígitos!");
         }
 
+        if (senha.length > 0 && senha.length > 35) {
+            erros.push('A senha não pode conter mais de 35 caracteres!')
+        }
+
+
+        if (!validarSenha(senha)) {
+            erros.push('A senha não pode conter caracteres especiais (%, #, @ , etc)')
+        }
 
 
         setSenhaErro(erros);
@@ -63,6 +76,10 @@ const FormEtapaUm = ({ handleEtapa, handleVerificarEtapa }: Props) => {
         if (email.length === 0) {
             emailErroTemp.push('É necessário informar o email!')
         }
+        if (nome.length > 150) {
+            nomeErroTemp.push("O nome não pode conter mais de 150 caracteres")
+        }
+
 
 
 
@@ -118,6 +135,7 @@ const FormEtapaUm = ({ handleEtapa, handleVerificarEtapa }: Props) => {
                         value={nome}
                         onChange={(e) => setNome(e.target.value)}
                         onBlur={checkTextFields}
+                        max={150}
                     />
                     <span className="errorField">
                         {erro && nomeErro.length >= 1 &&
@@ -154,6 +172,8 @@ const FormEtapaUm = ({ handleEtapa, handleVerificarEtapa }: Props) => {
                         value={senha}
                         onChange={(e) => setSenha(e.target.value)}
                         onBlur={checkSenha}
+                        minLength={8}
+                        maxLength={35}
                     />
                     <div
                         onClick={() => setMostrarSenha(current => !current)}
