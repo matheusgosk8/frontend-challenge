@@ -2,7 +2,7 @@ import Hello from "@/components/Hello";
 
 export default function Home() {
   return (
-    <main>
+    <main className="">
       <Hello />
     </main>
   );

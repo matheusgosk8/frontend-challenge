@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body,
+html {
+  min-height: 100vh;
+  height: fit-content;
+}
+
+
+.home{
+   display: flex;
+   flex-direction: column;
+   gap: 1em;
+   justify-content: center;
+   align-items: center;
+}
+
+.inputField{
+  @apply p-1 ml-2 border-gray-500 border-b outline-none max-w-xl text-xl placeholder:opacity-45 my-2
+}
+
+.labelField{
+  @apply text-3xl text-blue-500 font-semibold
+}
+
+.containerField{
+  @apply bg-white flex flex-col w-full
+}
+
+.errorField{
+  @apply text-sm text-red-600 ml-2
+}
+
+.commonIcon{
+  @apply cursor-pointer opacity-65 hover:opacity-100 transition-opacity
+}
