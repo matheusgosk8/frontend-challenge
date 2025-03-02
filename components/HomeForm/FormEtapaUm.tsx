@@ -1,4 +1,5 @@
 import { TDadosEtapaUm } from '@/Types/formTypes'
+import { verificarSenha } from '@/Utils/verificarSenha'
 import { Span } from 'next/dist/trace'
 import React, { useEffect, useState } from 'react'
 import { BsArrowRight, BsEye, BsEyeSlash } from 'react-icons/bs'
@@ -31,11 +32,6 @@ const FormEtapaUm = ({ handleEtapa, handleVerificarEtapa }: Props) => {
     const [emailErro, setEmailErro] = useState<string[]>(['']);
 
 
-    const validarSenha = (val: string) => {
-        // Verifica se a senha é alfanumérica (contém letras e números)
-        const regex = /^[a-zA-Z0-9]+$/;
-        return regex.test(val);
-    };
 
 
     const checkSenha = () => {
@@ -57,7 +53,7 @@ const FormEtapaUm = ({ handleEtapa, handleVerificarEtapa }: Props) => {
         }
 
 
-        if (!validarSenha(senha)) {
+        if (!verificarSenha(senha)) {
             erros.push('A senha não pode conter caracteres especiais (%, #, @ , etc)')
         }
 

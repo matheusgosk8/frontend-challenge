@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
+import { verificarSenha } from '@/Utils/verificarSenha';
 
 export async function GET(request: NextRequest) {
 
@@ -33,6 +34,9 @@ export const POST = async (request: Request) => {
     const dados = body.data;
     console.log(dados);
 
+    /**
+     *Verificando se algum valor do corpo da requisição é vazio! 
+     */
     const checkData = Object.values(dados).some(value => value === null || value === undefined || value === '' || (Array.isArray(value) && value.length === 0) || (typeof value === 'object' && Object.keys(value).length === 0));
 
     if (checkData) {
@@ -45,9 +49,9 @@ export const POST = async (request: Request) => {
     // Tratando os dados
     const senha = dados.senha;
 
-    const regex = /^[a-zA-Z0-9]+$/;
-    const testSenha = regex.test(senha);
-    if (!testSenha) {
+
+
+    if (!verificarSenha(senha)) {
       return NextResponse.json({
         message: 'Erro, a senha contém caracteres não permitidos!',
         status: 3
@@ -58,6 +62,9 @@ export const POST = async (request: Request) => {
     const hashedSenha = await bcrypt.hash(senha, 12);
     console.log('Hashed senha: ', hashedSenha)
 
+    /**
+     * @returns status Utilizo no FE para catalogar melhor as respostas do servidor.
+     */
     return NextResponse.json({ message: 'Dados enviados com sucesso!', status: 1 }, { status: 200, statusText: "Ok!" })
 
   } catch (error) {
