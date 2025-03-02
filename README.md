@@ -72,7 +72,7 @@ Antes de rodar o projeto, é necessário configurar a chave da API para utilizar
 realize uma das alternativas abaixo.
 
 1. Copie o arquivo `.env.example` e renomeie para `.env`.
-2. Insira a chave da API no arquivo `.env`.
+2. Insira uma chave da API no arquivo `.env`.
 
 Esta chave será apagada daqui a uma semana (08/03/2025) por questões de segurança.
 
