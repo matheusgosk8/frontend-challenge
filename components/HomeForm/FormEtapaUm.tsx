@@ -31,9 +31,6 @@ const FormEtapaUm = ({ handleEtapa, handleVerificarEtapa }: Props) => {
     const [nomeErro, setNomeErro] = useState<string[]>(['']);
     const [emailErro, setEmailErro] = useState<string[]>(['']);
 
-
-
-
     const checkSenha = () => {
         let erros: string[] = [];
         let confirmarSenhaErros: string[] = [];
@@ -41,10 +38,10 @@ const FormEtapaUm = ({ handleEtapa, handleVerificarEtapa }: Props) => {
         if (senha !== confirmarSenha) {
             confirmarSenhaErros.push("As senhas não coincidem!");
         }
-        if (senha.length > 0 && senha.length < 8) {
+        if (senha.length < 8) {
             erros.push("A senha deve ter mais de 8 dígitos!");
         }
-        if (confirmarSenha.length > 0 && confirmarSenha.length < 8) {
+        if (confirmarSenha.length < 8) {
             confirmarSenhaErros.push("A senha deve ter mais de 8 dígitos!");
         }
 
@@ -52,11 +49,9 @@ const FormEtapaUm = ({ handleEtapa, handleVerificarEtapa }: Props) => {
             erros.push('A senha não pode conter mais de 35 caracteres!')
         }
 
-
         if (!verificarSenha(senha)) {
             erros.push('A senha não pode conter caracteres especiais (%, #, @ , etc)')
         }
-
 
         setSenhaErro(erros);
         setConfirmarSenhaErro(confirmarSenhaErros);
@@ -72,12 +67,10 @@ const FormEtapaUm = ({ handleEtapa, handleVerificarEtapa }: Props) => {
         if (email.length === 0) {
             emailErroTemp.push('É necessário informar o email!')
         }
+
         if (nome.length > 150) {
             nomeErroTemp.push("O nome não pode conter mais de 150 caracteres")
         }
-
-
-
 
         setNomeErro(nomeErroTemp);
         setEmailErro(emailErroTemp)
@@ -87,6 +80,7 @@ const FormEtapaUm = ({ handleEtapa, handleVerificarEtapa }: Props) => {
     const handleSendEtapa = () => {
         checkTextFields()
         checkSenha()
+
         if (emailErro.length >= 1 || nomeErro.length >= 1 || senhaErro.length >= 1 || confirmarSenhaErro.length >= 1) {
             setErro(true);
 

@@ -1,6 +1,6 @@
 export const verificarSenha = (senha: string) => {
   if (!senha) {
-    return false;
+    return true;
   }
 
   try {
