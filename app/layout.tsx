@@ -6,7 +6,7 @@ import { ReactQueryProvider } from "@/Providers/ReactQueryProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "App Title",
+  title: "Teste imobilead",
   description: "Good luck!",
 };
 
